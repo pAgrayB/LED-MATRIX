@@ -48,78 +48,7 @@
     Alex Leone <acleone ~AT~ gmail.com>, 2009-02-03 */
 
 #include "Tlc5940.h"
-#include <SPI.h>
-
-#define T0 0b00000001
-#define T1 0b00000010
-#define T2 0b00000100
-#define T3 0b00001000
-#define NONE 0x00
-
-int shiftLatch = 8;
-int dataPin = 11;
-
-class transistors
-{
-  private:
-    int shiftLatch;
-    int dataPin;
-    uint8_t currentTransistor;
-
-  public:
-    void init ()
-    {
-      shiftLatch = 8;
-      dataPin = 11;
-      currentTransistor = NONE;
-      pinMode(shiftLatch, OUTPUT);
-      pinMode(dataPin, OUTPUT);
-      digitalWrite(shiftLatch, LOW);
-      digitalWrite(dataPin, LOW);
-    }
-
-    void clear ()
-    {
-      currentTransistor = NONE;
-    }
-    
-    void set (int transistor)
-    {
-      if (transistor < 0 || transistor > 3)
-      {
-        return;
-      }
-
-      switch (transistor)
-      {
-        case 0:
-          currentTransistor = T0;
-          break;
-        case 1:
-          currentTransistor = T1;
-          break;
-        case 2:
-          currentTransistor = T2;
-          break;
-        case 3:
-          currentTransistor = T3;
-          break;  
-        default:
-          currentTransistor = NONE;
-          break;
-      }
-    }
-
-    void update ()
-    {
-      SPI.transfer(currentTransistor);
-      digitalWrite(shiftLatch, HIGH);
-      digitalWrite(shiftLatch, LOW);
-    }
-  
-};
-
-transistors Mosfets;
+#include "transistors.h"
 
 void setup()
 {
@@ -168,6 +97,8 @@ void loop()
 
    /* Mosfets.set(1);
     Tlc.set(0, 4000);*/
+
+    Mosfets.set(0);
 
     /* Tlc.update() sends the data to the TLCs.  This is when the LEDs will
        actually change. */
