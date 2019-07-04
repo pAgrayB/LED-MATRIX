@@ -1,1 +1,0 @@
-Arduino library to control rows of LED-MATRIX

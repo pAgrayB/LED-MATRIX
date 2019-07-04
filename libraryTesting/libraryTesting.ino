@@ -47,66 +47,33 @@
 
     Alex Leone <acleone ~AT~ gmail.com>, 2009-02-03 */
 
-#include "Tlc5940.h"
-#include "transistors.h"
+#include "LED-MATRIX.h"
+
+uint16_t pattern [4][4];
 
 void setup()
 {
-  /* Call Tlc.init() to setup the tlc.
-     You can optionally pass an initial PWM value (0 - 4095) for all channels.*/
-  Tlc.init();
-  Mosfets.init();
+
+  for (int row = 0; row < 4; row++)
+  {
+    for (int col = 0; col < 4; col++)
+    {
+      pattern[row][col] = 2000;
+    }
+  }
+  
+  /* Call matrix.init() to setup the LED-matrix.
+  */
+  matrix.init();
+  matrix.clear();
 }
 
-/* This loop will create a Knight Rider-like effect if you have LEDs plugged
-   into all the TLC outputs.  NUM_TLCS is defined in "tlc_config.h" in the
-   library folder.  After editing tlc_config.h for your setup, delete the
-   Tlc5940.o file to save the changes. */
+/*
+ * This loop turns on all LEDs
+ */
 
 void loop()
 {
-    
-  
-  int direction = 1;
-  for (int channel = 0; channel < NUM_TLCS * 4; channel += direction) {
-
-    /* Tlc.clear() sets all the grayscale values to zero, but does not send
-       them to the TLCs.  To actually send the data, call Tlc.update() */
-    Tlc.clear();
-    Mosfets.clear();
-
-    /* Tlc.set(channel (0-15), value (0-4095)) sets the grayscale value for
-       one channel (15 is OUT15 on the first TLC, if multiple TLCs are daisy-
-       chained, then channel = 16 would be OUT0 of the second TLC, etc.).
-
-       value goes from off (0) to always on (4095).
-
-       Like Tlc.clear(), this function only sets up the data, Tlc.update()
-       will send the data. */
-    if (channel == 0) {
-      direction = 1;
-    } else {
-      Tlc.set(channel - 1, 1000);
-    }
-    Tlc.set(channel, 2000);
-    if (channel != NUM_TLCS * 4 - 1) {
-      Tlc.set(channel + 1, 1000);
-    } else {
-      direction = -1;
-    }
-
-   /* Mosfets.set(1);
-    Tlc.set(0, 4000);*/
-
-    Mosfets.set(0);
-
-    /* Tlc.update() sends the data to the TLCs.  This is when the LEDs will
-       actually change. */
-    
-    Mosfets.update();
-    Tlc.update();
-
-    delay(75);
-  }
-
+  matrix.set(pattern);
+  matrix.update(1000, 20);
 }
