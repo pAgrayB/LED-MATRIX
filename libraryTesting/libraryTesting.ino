@@ -54,26 +54,40 @@ uint16_t pattern [4][4];
 void setup()
 {
 
-  for (int row = 0; row < 4; row++)
-  {
-    for (int col = 0; col < 4; col++)
-    {
-      pattern[row][col] = 2000;
-    }
-  }
   
   /* Call matrix.init() to setup the LED-matrix.
   */
   matrix.init();
+  /* Matrix.clear() clears the buffer */
   matrix.clear();
 }
+
 
 /*
  * This loop turns on all LEDs
  */
-
 void loop()
 {
-  matrix.set(pattern);
-  matrix.update(1000, 20);
+  
+  for (int row = 0; row < 4; row++)
+  {
+    for (int col = 0; col < 4; col++)
+    {
+      pattern[col][row] = 4095;
+      
+      /* matrix.set( uint16_t 2Darray [4][4] ) stores the 
+      desired pattern in a buffer. */
+      matrix.set(pattern);
+      
+      /* matrix.update( pattern_duration_ms, row_on_time_ms) uploads the pattern
+      in the buffer to the Arduino.*/
+      matrix.update(100, 3);
+
+      pattern[col][row] = 0;
+      
+    }
+  }
+      
+
+  
 }

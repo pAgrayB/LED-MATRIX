@@ -13,22 +13,6 @@
 #define NONE 0x00
 
 /*
-    Main API to interact with LED matrix.
-*/
-
-class LEDmatrix
-{
-  private:
-      uint16_t display [4][4];
-
-  public:
-    void init ();
-    void clear ();
-    void set ( uint16_t [4][4]);
-    void update ( uint16_t, unsigned long);
-};
-
-/*
     Helper class allowing ease of interacting with rows of LED-matrix.
     API is same as the Tlc5940 class in Tlc5940.h
 */
@@ -46,8 +30,23 @@ class transistors
     void update ();
 };
 
-// Pre-instantiated transistors variable
-extern transistors Mosfets;
+/*  Main API to interact with LED matrix. */
+class LEDmatrix
+{
+  private:
+      transistors Mosfets;
+      uint16_t display [4][4];
+
+  public:
+    void init ();
+    void clear ();
+    void set ( uint16_t [4][4]);
+    void update ( unsigned long, unsigned long);
+};
+
+
+
+/*  Pre-instantiated matrix object */
 extern LEDmatrix matrix;
 
 #endif

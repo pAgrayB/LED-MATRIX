@@ -1,13 +1,13 @@
 #include "LED-MATRIX.h"
 
-// Initiates objects needed to control LED rows and columns
+/*  Initiates objects needed to control LED rows and columns */
 void LEDmatrix::init ()
 {
     Mosfets.init();
     Tlc.init();
 }
 
-// Sets each LED to 0 brightness
+/*  Sets each LED to 0 brightness */
 void LEDmatrix::clear()
 {
     for (int row = 0; row < 4; row++)
@@ -19,8 +19,10 @@ void LEDmatrix::clear()
     }
 }
 
-// Stores pattern specified by user to buffer with entries
-// ranging from 0-4095
+/*
+    Stores pattern specified by user to buffer with entries
+    ranging from 0-4095
+*/
 void LEDmatrix::set( uint16_t pattern [4][4])
 {
     for (int row = 0; row < 4; row++)
@@ -32,20 +34,35 @@ void LEDmatrix::set( uint16_t pattern [4][4])
     }
 }
 
-// Uploads pattern in buffer to display for pattern_dur milliseconds.
-// Pattern is multiplexed with each row on row_on_time milliseconds.
-void LEDmatrix::update (uint16_t pattern_dur, unsigned long row_on_time)
+/*
+    Uploads pattern in buffer to display for pattern_dur milliseconds.
+    Pattern is multiplexed with each row on row_on_time milliseconds.
+*/
+void LEDmatrix::update (unsigned long pattern_dur, unsigned long row_on_time)
 {
     unsigned long enterTime = millis();
     for (int row = 0; millis() - enterTime < pattern_dur; row++)
     {
+        if (row == 4)
+        {
+         row = 0;
+        }
+
+        /* Fixes issue of next row of LEDs mimiking pattern of row before.
+        */
+        Tlc.clear();
+        Tlc.update();
+
+        delay(1); //time for Tlc to get settled for next row pattern
+
         Mosfets.set(row);
-        Mosfets.update();
+
         for (int col = 0; col < 4; col++)
         {
                 Tlc.set(col, display[row][col]);
-                Tlc.update();
         }
+        Mosfets.update();
+        Tlc.update();
         delay(row_on_time);
     }
 }
@@ -71,17 +88,13 @@ void transistors::init ()
       SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
     }
 
- /*
-    Clears buffer.
- */
+/*  Clears buffer */
 void transistors::clear ()
     {
       currentTransistor = NONE;
     }
 
-/*
-    Allows specification of row in buffer.
-*/
+/*  Allows specification of row in buffer. */
 void transistors::set (int transistor)
     {
       if (transistor < 0 || transistor > 3)
@@ -109,9 +122,7 @@ void transistors::set (int transistor)
       }
     }
 
-/*
-    Sends items from buffer to Arduino Uno via SPI.
-*/
+/*  Sends items from buffer to Arduino Uno via SPI. */
 void transistors::update ()
     {
       SPI.transfer(currentTransistor);
@@ -120,6 +131,5 @@ void transistors::update ()
     }
 
 
-// Pre-instantiated transistors variable
-transistors Mosfets;
+/*  Pre-instantiated matrix object */
 LEDmatrix matrix;
