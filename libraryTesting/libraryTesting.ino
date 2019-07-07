@@ -43,51 +43,77 @@
     This library uses the PWM output ability of digital pins 3, 9, 10, and 11.
     Do not use analogWrite(...) on these pins.
 
-    This sketch does the Knight Rider strobe across a line of LEDs.
-
-    Alex Leone <acleone ~AT~ gmail.com>, 2009-02-03 */
+    Original Author - Alex Leone <acleone ~AT~ gmail.com>, 2009-02-03
+    Editor for LED-MATRIX-LIB - Patrick Graybeal <ptgraybeal@gmail.com>, July 6th, 2019
+    */
 
 #include "LED-MATRIX.h"
 
 uint16_t pattern [4][4];
+int i = 0;
+int dir = 1;
 
 void setup()
 {
-
-  
-  /* Call matrix.init() to setup the LED-matrix.
-  */
+  /* Call matrix.init() to setup the LED-matrix. */
   matrix.init();
   /* Matrix.clear() clears the buffer */
   matrix.clear();
 }
 
-
-/*
- * This loop turns on all LEDs
- */
+/* This loop creates a neat pattern on the matrix */
 void loop()
 {
-  
-  for (int row = 0; row < 4; row++)
-  {
-    for (int col = 0; col < 4; col++)
-    {
-      pattern[col][row] = 4095;
-      
-      /* matrix.set( uint16_t 2Darray [4][4] ) stores the 
-      desired pattern in a buffer. */
-      matrix.set(pattern);
-      
-      /* matrix.update( pattern_duration_ms, row_on_time_ms) uploads the pattern
-      in the buffer to the Arduino.*/
-      matrix.update(100, 3);
+  pattern[0][3 - i] = 4095;
+  pattern[1][3 - i] = 4095;
+  pattern[2][i] = 4095;
+  pattern[3][i] = 4095;
+    
+  /* matrix.set( uint16_t 2Darray [4][4] ) stores the 
+  desired pattern in a buffer. */
+  matrix.set(pattern);
+    
+  /* matrix.update( pattern_duration_ms, row_on_time_ms) uploads the pattern
+  in the buffer to the Arduino.*/
+  matrix.update(100, 3);
 
-      pattern[col][row] = 0;
-      
+  pattern[0][3 - i] = 800;
+  pattern[1][3 - i] = 800;
+  pattern[2][i] = 800;
+  pattern[3][i] = 800;
+
+  if (dir == 1 && i != 0) {
+    pattern[0][3 - i + 1] = 0;
+    pattern[1][3 - i + 1] = 0;
+    pattern[2][i - 1] = 0;
+    pattern[3][i - 1] = 0;
+
+    if (i != 1) {
+      pattern[0][3 - i + 2] = 0;
+      pattern[1][3 - i + 2] = 0;
+      pattern[2][i - 2] = 0;
+      pattern[3][i - 2] = 0;
+    }
+    
+  } else if (dir == -1 && i != 3) {
+    pattern[0][3 - i - 1] = 0;
+    pattern[1][3 - i - 1] = 0;
+    pattern[2][i + 1] = 0;
+    pattern[3][i + 1] = 0;
+
+    if (i != 2) {
+      pattern[0][3 - i - 2] = 0;
+      pattern[1][3 - i - 2] = 0;
+      pattern[2][i + 2] = 0;
+      pattern[3][i + 2] = 0;
     }
   }
-      
-
   
+  if (i == 3) {
+    dir = -1;
+  } else if (i == 0) {
+    dir = 1;
+  }
+
+  i = i + dir;
 }
