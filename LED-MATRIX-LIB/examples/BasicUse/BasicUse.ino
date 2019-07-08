@@ -1,6 +1,6 @@
 /*
     Basic Pin setup (TLC5940 and SN74HC595N are only connected to ARDUINO)
-    ------------                                  ---u----                                 --u--
+    ------------                                    ---u----                                 --u--
     ARDUINO   13|-> SCLK (pin 25 & pin 11)    OUT1 |1     28| OUT channel 0              QB |1   16| -> VCC (+5V)
               12|                             OUT2 |2     27|-> GND (VPRG)               QC |2   15| QA
               11|-> SIN (pin 26 & pin 14)     OUT3 |3     26|-> SIN (pin 11)             QD |3   14| -> SER (pin 11)
