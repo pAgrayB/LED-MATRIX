@@ -29,7 +29,12 @@ void LEDmatrix::set( uint16_t pattern [4][4])
     {
         for (int col = 0; col < 4; col++)
         {
-            display[row][col] = pattern[row][col];
+            if ( pattern[row][col] < 4096 && pattern[row][col] >= 0)
+            {
+                display[row][col] = pattern[row][col];
+            } else {
+                display[row][col] = 0;
+            }
         }
     }
 }

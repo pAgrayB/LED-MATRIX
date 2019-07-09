@@ -10,7 +10,7 @@ void setup() {
   {
     for (int col = 0; col < 4; col++)
     {
-      pattern[row][col] = 2000;
+      pattern[row][col] = 4095;
     }
   }
 
