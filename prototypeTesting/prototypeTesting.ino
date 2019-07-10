@@ -10,7 +10,7 @@ void setup() {
   {
     for (int col = 0; col < 4; col++)
     {
-      pattern[row][col] = 4095;
+      pattern[row][col] = 250;
     }
   }
 
@@ -18,6 +18,6 @@ void setup() {
 
 void loop() {
   matrix.set(pattern);
-  matrix.update(1000, 3);
+  matrix.update(10000, 3);
 
 }
