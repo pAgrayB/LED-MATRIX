@@ -49,9 +49,7 @@
 
 #include "LED-MATRIX.h"
 
-uint16_t pattern [4][4];
-int i = 0;
-int dir = 1;
+uint16_t pattern [8][8];
 
 void setup()
 {
@@ -64,10 +62,13 @@ void setup()
 /* This loop creates a neat pattern on the matrix */
 void loop()
 {
-  pattern[0][3 - i] = 4095;
-  pattern[1][3 - i] = 4095;
-  pattern[2][i] = 4095;
-  pattern[3][i] = 4095;
+  for (int row = 0; row < 8; row++)
+  {
+    for (int col = 0; col < 8; col++)
+    {
+      pattern[row][col] = 4095; 
+    }
+  }
     
   /* matrix.set( uint16_t 2Darray [4][4] ) stores the 
   desired pattern in a buffer. */
@@ -75,45 +76,6 @@ void loop()
     
   /* matrix.update( pattern_duration_ms, row_on_time_ms) uploads the pattern
   in the buffer to the Arduino.*/
-  matrix.update(100, 3);
+  matrix.update(10000, 2);
 
-  pattern[0][3 - i] = 800;
-  pattern[1][3 - i] = 800;
-  pattern[2][i] = 800;
-  pattern[3][i] = 800;
-
-  if (dir == 1 && i != 0) {
-    pattern[0][3 - i + 1] = 0;
-    pattern[1][3 - i + 1] = 0;
-    pattern[2][i - 1] = 0;
-    pattern[3][i - 1] = 0;
-
-    if (i != 1) {
-      pattern[0][3 - i + 2] = 0;
-      pattern[1][3 - i + 2] = 0;
-      pattern[2][i - 2] = 0;
-      pattern[3][i - 2] = 0;
-    }
-    
-  } else if (dir == -1 && i != 3) {
-    pattern[0][3 - i - 1] = 0;
-    pattern[1][3 - i - 1] = 0;
-    pattern[2][i + 1] = 0;
-    pattern[3][i + 1] = 0;
-
-    if (i != 2) {
-      pattern[0][3 - i - 2] = 0;
-      pattern[1][3 - i - 2] = 0;
-      pattern[2][i + 2] = 0;
-      pattern[3][i + 2] = 0;
-    }
-  }
-  
-  if (i == 3) {
-    dir = -1;
-  } else if (i == 0) {
-    dir = 1;
-  }
-
-  i = i + dir;
 }

@@ -10,13 +10,17 @@
 #define T1 0b00000010
 #define T2 0b00000100
 #define T3 0b00001000
+#define T4 0b00010000
+#define T5 0b00100000
+#define T6 0b01000000
+#define T7 0b10000000
 #define NONE 0x00
 
 /*
     Helper class allowing ease of interacting with rows of LED-matrix.
     API is same as the Tlc5940 class in Tlc5940.h
 */
-class transistors
+class Transistors
 {
   private:
     int shiftLatch;
@@ -34,13 +38,13 @@ class transistors
 class LEDmatrix
 {
   private:
-      transistors Mosfets;
-      uint16_t display [4][4];
+      Transistors Mosfets;
+      uint16_t display [8][8];
 
   public:
     void init ();
     void clear ();
-    void set ( uint16_t [4][4]);
+    void set ( uint16_t [8][8]);
     void update ( unsigned long, unsigned long);
 };
 

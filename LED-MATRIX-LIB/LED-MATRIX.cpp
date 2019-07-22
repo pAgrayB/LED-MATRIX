@@ -10,9 +10,9 @@ void LEDmatrix::init ()
 /*  Sets each LED to 0 brightness */
 void LEDmatrix::clear()
 {
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 8; row++)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 8; col++)
         {
             display[row][col] = 0;
         }
@@ -23,11 +23,11 @@ void LEDmatrix::clear()
     Stores pattern specified by user to buffer with entries
     ranging from 0-4095
 */
-void LEDmatrix::set( uint16_t pattern [4][4])
+void LEDmatrix::set( uint16_t pattern [8][8])
 {
-    for (int row = 0; row < 4; row++)
+    for (int row = 0; row < 8; row++)
     {
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 8; col++)
         {
             if ( pattern[row][col] < 4096 && pattern[row][col] >= 0)
             {
@@ -48,7 +48,7 @@ void LEDmatrix::update (unsigned long pattern_dur, unsigned long row_on_time)
     unsigned long enterTime = millis();
     for (int row = 0; millis() - enterTime < pattern_dur; row++)
     {
-        if (row == 4)
+        if (row == 8)
         {
          row = 0;
         }
@@ -62,7 +62,7 @@ void LEDmatrix::update (unsigned long pattern_dur, unsigned long row_on_time)
 
         Mosfets.set(row);
 
-        for (int col = 0; col < 4; col++)
+        for (int col = 0; col < 8; col++)
         {
                 Tlc.set(col, display[row][col]);
         }
@@ -80,7 +80,7 @@ void LEDmatrix::update (unsigned long pattern_dur, unsigned long row_on_time)
     Ensures all GPIO pins needed start out at LOW.
     Begins SPI transaction at 4MHz with MSB first.
 */
-void transistors::init ()
+void Transistors::init ()
     {
       shiftLatch = 8;
       dataPin = 11;
@@ -94,15 +94,15 @@ void transistors::init ()
     }
 
 /*  Clears buffer */
-void transistors::clear ()
+void Transistors::clear ()
     {
       currentTransistor = NONE;
     }
 
 /*  Allows specification of row in buffer. */
-void transistors::set (int transistor)
+void Transistors::set (int transistor)
     {
-      if (transistor < 0 || transistor > 3)
+      if (transistor < 0 || transistor > 8)
       {
         return;
       }
@@ -110,17 +110,29 @@ void transistors::set (int transistor)
       switch (transistor)
       {
         case 0:
-          currentTransistor = T0;
-          break;
+            currentTransistor = T0;
+            break;
         case 1:
-          currentTransistor = T1;
-          break;
+            currentTransistor = T1;
+            break;
         case 2:
-          currentTransistor = T2;
-          break;
+            currentTransistor = T2;
+            break;
         case 3:
-          currentTransistor = T3;
-          break;
+            currentTransistor = T3;
+            break;
+        case 4:
+            currentTransistor = T4;
+            break;
+        case 5:
+            currentTransistor = T5;
+            break;
+        case 6:
+            currentTransistor = T6;
+            break;
+        case 7:
+            currentTransistor = T7;
+            break;
         default:
           currentTransistor = NONE;
           break;
@@ -128,7 +140,7 @@ void transistors::set (int transistor)
     }
 
 /*  Sends items from buffer to Arduino Uno via SPI. */
-void transistors::update ()
+void Transistors::update ()
     {
       SPI.transfer(currentTransistor);
       digitalWrite(shiftLatch, HIGH);
