@@ -16,7 +16,7 @@
                1|                               .  |13    16|-> XERR
                0|                             OUT14|14    15| OUT channel 15
     ------------                                    -------- TLC5940
-
+ 
     -  Put the longer leg (anode) of the LEDs in the +5V and the shorter leg
          (cathode) in OUT(0-15).
     -  +5V from Arduino -> TLC pin 21 and 19     (VCC and DCPRG)
@@ -49,7 +49,7 @@
 
 #include "LED-MATRIX.h"
 
-uint16_t pattern [4][4];
+uint16_t pattern [8][8];
 int i = 0;
 int dir = 1;
 
@@ -64,52 +64,76 @@ void setup()
 /* This loop creates a neat pattern on the matrix */
 void loop()
 {
-  pattern[0][3 - i] = 4095;
-  pattern[1][3 - i] = 4095;
+  pattern[0][7 - i] = 4095;
+  pattern[1][7 - i] = 4095;
   pattern[2][i] = 4095;
   pattern[3][i] = 4095;
+  pattern[4][7 - i] = 4095;
+  pattern[5][7 - i] = 4095;
+  pattern[6][i] = 4095;
+  pattern[7][i] = 4095;
     
-  /* matrix.set( uint16_t 2Darray [4][4] ) stores the 
+  /* matrix.set( uint16_t 2Darray [8][8] ) stores the 
   desired pattern in a buffer. */
   matrix.set(pattern);
     
   /* matrix.update( pattern_duration_ms, row_on_time_ms) uploads the pattern
   in the buffer to the Arduino.*/
-  matrix.update(100, 3);
+  matrix.update(50, 1);
 
-  pattern[0][3 - i] = 800;
-  pattern[1][3 - i] = 800;
+  pattern[0][7 - i] = 800;
+  pattern[1][7 - i] = 800;
   pattern[2][i] = 800;
   pattern[3][i] = 800;
+  pattern[4][7 - i] = 800;
+  pattern[5][7 - i] = 800;
+  pattern[6][i] = 800;
+  pattern[7][i] = 800;
 
   if (dir == 1 && i != 0) {
-    pattern[0][3 - i + 1] = 0;
-    pattern[1][3 - i + 1] = 0;
+    pattern[0][7 - i + 1] = 0;
+    pattern[1][7 - i + 1] = 0;
     pattern[2][i - 1] = 0;
     pattern[3][i - 1] = 0;
+    pattern[4][7 - i + 1] = 0;
+    pattern[5][7 - i + 1] = 0;
+    pattern[6][i - 1] = 0;
+    pattern[7][i - 1] = 0;
 
     if (i != 1) {
-      pattern[0][3 - i + 2] = 0;
-      pattern[1][3 - i + 2] = 0;
-      pattern[2][i - 2] = 0;
-      pattern[3][i - 2] = 0;
+    pattern[0][7 - i + 2] = 0;
+    pattern[1][7 - i + 2] = 0;
+    pattern[2][i - 2] = 0;
+    pattern[3][i - 2] = 0;
+    pattern[4][7 - i + 2] = 0;
+    pattern[5][7 - i + 2] = 0;
+    pattern[6][i - 2] = 0;
+    pattern[7][i - 2] = 0;
     }
     
-  } else if (dir == -1 && i != 3) {
-    pattern[0][3 - i - 1] = 0;
-    pattern[1][3 - i - 1] = 0;
+  } else if (dir == -1 && i != 7) {
+    pattern[0][7 - i - 1] = 0;
+    pattern[1][7 - i - 1] = 0;
     pattern[2][i + 1] = 0;
     pattern[3][i + 1] = 0;
+    pattern[4][7 - i - 1] = 0;
+    pattern[5][7 - i - 1] = 0;
+    pattern[6][i + 1] = 0;
+    pattern[7][i + 1] = 0;
 
-    if (i != 2) {
-      pattern[0][3 - i - 2] = 0;
-      pattern[1][3 - i - 2] = 0;
-      pattern[2][i + 2] = 0;
-      pattern[3][i + 2] = 0;
+    if (i != 6) {
+    pattern[0][7 - i - 2] = 0;
+    pattern[1][7 - i - 2] = 0;
+    pattern[2][i + 2] = 0;
+    pattern[3][i + 2] = 0;
+    pattern[4][7 - i - 2] = 0;
+    pattern[5][7 - i - 2] = 0;
+    pattern[6][i + 2] = 0;
+    pattern[7][i + 2] = 0;
     }
   }
   
-  if (i == 3) {
+  if (i == 7) {
     dir = -1;
   } else if (i == 0) {
     dir = 1;
