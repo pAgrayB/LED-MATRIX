@@ -1,23 +1,150 @@
-#include <SPI.h>
+/*
+ * Looks as though squares are enlarging and shrinking from middle of matrix.
+ * 
+ */
 
-#define transistor0_ON 0b00000001 //row 0
-#define transistor1_ON 0b00000010 //row 1
-#define transistor2_ON 0b00000100 //row 2
-#define transistor3_ON 0b00001000 //row 3
 
-int shiftLatch = 8;
-int driverLatch = 9;
-int dataPin = 11;
-// ClockPin is pin 13 by default on Uno in Arduino SPI Library
+#include "LED-MATRIX.h"
 
-void setup() {
-  pinMode(shiftLatch, OUTPUT);
-  pinMode(driverLatch, OUTPUT);
-  pinMode(dataPin, OUTPUT);
-  SPI.begin();
-  SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
+enum {image0, image1, image2, image3};
+
+uint16_t pattern [8][8];
+int i = image0;
+int dir = 1;
+
+void setup() 
+{
+  matrix.init();
+  matrix.clear();
+
 }
 
 void loop() {
+
+  for (int row = 0; row <= 7; row++)
+  {
+    for (int col = 0; col <= 7; col++)
+    {
+      pattern[row][col] = 0;
+    }
+  }
+
+  matrix.clear();
+
+  switch(i)
+  {
+    case image0:
+    
+      for (int col = 3; col <= (7-3); col++)
+      {
+        for (int row = 3; row <= (7-3); row++)
+        {
+          pattern[row][col] = 4095;
+        }
+      }
+      break;
+      
+    case image1:
+      for (int col = 2; col <= (7-2); col++)
+      {
+        for (int row = 2; row <= (7-2); row++)
+        {
+          pattern[row][col] = 4095;
+        }
+      }
+
+      for (int col = 3; col <= (7-3); col++)
+      {
+        for (int row = 3; row <= (7-3); row++)
+        {
+          pattern[row][col] = 0;
+        }
+      }
+      break;
+      
+    case image2:
+    
+      for (int col = 1; col <=(7-1); col++)
+      {
+        for (int row = 1; row <= (7-1); row++)
+        {
+          pattern[row][col] = 4095;
+        }
+      }
+
+      for (int col = 2; col <= (7-2); col++)
+      {
+        for (int row = 2; row <= (7-2); row++)
+        {
+          pattern[row][col] = 0;
+        }
+      }
+
+      for (int col = 3; col <= (7-3); col++)
+      {
+        for (int row = 3; row <= (7-3); row++)
+        {
+          pattern[row][col] = 0;
+        }
+      }
+      
+      break;
+      
+    case image3:
+    
+      for (int col = 0; col <= (7-0); col++)
+      {
+        for (int row = 0; row <= (7-0); row++)
+        {
+          pattern[row][col] = 4095;
+        }
+      }
+
+      for (int col = 1; col <=(7-1); col++)
+      {
+        for (int row = 1; row <= (7-1); row++)
+        {
+          pattern[row][col] = 0;
+        }
+      }
+
+      for (int col = 2; col <= (7-2); col++)
+      {
+        for (int row = 2; row <= (7-2); row++)
+        {
+          pattern[row][col] = 0;
+        }
+      }
+
+      for (int col = 3; col <= (7-3); col++)
+      {
+        for (int row = 3; row <= (7-3); row++)
+        {
+          pattern[row][col] = 0;
+        }
+      }
+      break;
+      
+    default:
+    for (int row = 0; row <= 7; row++)
+    {
+      for (int col = 0; col <= 7; col++)
+      {
+        pattern[row][col] = 0;
+      }
+    }
+      break;
+      
+  }
+  
+  matrix.set(pattern);
+  matrix.update(70, 1);
+  
+  i+=dir;
+  
+  if (i == image3 || i == image0)
+  {
+    dir*=-1;
+  }
 
 }
