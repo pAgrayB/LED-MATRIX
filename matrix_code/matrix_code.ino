@@ -138,7 +138,7 @@ void loop() {
   }
   
   matrix.set(pattern);
-  matrix.update(70, 1);
+  matrix.update(80, 1);
   
   i+=dir;
   
