@@ -42,6 +42,8 @@ Special thanks to Wesley Jenkins for suggesting to have the LED-MATRIX controlle
 Thank you also to Alex Leone, the writer of the TLC5940 library. 
 
 # Future Improvements
-* lower voltage source for LEDs, 10V is left on pins of TLC5940
-* even easier software to create patterns, nested for-loops are a unintuitive to create neat patterns
-* a case to hold both PCBs in place and to expose circuitry for demonstrating operation of matrix
+* Lower voltage source for LEDs, 10V is left on output pins of TLC5940. Energy is wasted.
+* Even easier software to create patterns, "nested for-loops" are unintuitive to create neat patterns
+* A physical case to hold both PCBs in place and to expose circuitry for demonstrating operation of matrix
+* Energy consumption analysis
+* Software testing by new users
